@@ -14,11 +14,13 @@ SRC_URI = " \
 SRC_URI[md5sum] = "a9e8c100efe28bb63864e54e801fcabf"
 SRC_URI[sha256sum] = "f462401e6eb77eac8beb52d1fd97bda4b9e7870147d431af98dd98d7da444397"
 
-S = "${WORKDIR}/2011_0719_RT3070_RT3370_RT5370_RT5372_Linux_STA_V${PV}_DPO"
+S = "${UNPACKDIR}/2011_0719_RT3070_RT3370_RT5370_RT5372_Linux_STA_V${PV}_DPO"
 
 inherit module
 
 EXTRA_OEMAKE = "LINUX_SRC=${STAGING_KERNEL_DIR} KDIR=${STAGING_KERNEL_DIR}"
+
+export KCFLAGS += " -std=gnu17"
 
 do_install() {
     install -d ${D}${nonarch_base_libdir}/modules/${KERNEL_VERSION}/kernel/drivers/net/wireless

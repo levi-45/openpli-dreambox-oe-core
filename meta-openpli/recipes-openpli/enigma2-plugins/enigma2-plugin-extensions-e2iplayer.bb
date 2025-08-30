@@ -5,15 +5,10 @@ SECTION = "multimedia"
 LICENSE = "GPL-2.0-only"
 require conf/license/license-gplv2.inc
 
-SRC_URI = "git://github.com/oe-mirrors/e2iplayer.git;protocol=http;branch=python3;protocol=https \
-	file://no-need-to-check-depends.patch \
-"
-
-S = "${WORKDIR}/git"
-
-inherit gitpkgv
+SRC_URI = "git://github.com/oe-mirrors/e2iplayer.git;protocol=http;branch=python3;protocol=https"
+inherit gittag
 PV = "git"
-PKGV = "git${GITPKGV}"
+PKGV = "${GITPKGVTAG}"
 PR = "r0"
 
 inherit setuptools3-openplugins gettext
@@ -27,6 +22,7 @@ RRECOMMENDS:${PN} = " \
         python3-e2icjson \
         python3-json \
         python3-shell \
+        python3-websocket-client \
         "
 
 do_install:append() {

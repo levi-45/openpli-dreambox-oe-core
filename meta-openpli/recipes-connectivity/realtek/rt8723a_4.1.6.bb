@@ -24,8 +24,9 @@ inherit module
 
 EXTRA_OEMAKE = "LINUX_SRC=${STAGING_KERNEL_DIR} KDIR=${STAGING_KERNEL_DIR}"
 
-# need only for dreambox linux-meson64 4.9 + GCC 14
-export KCFLAGS += " -Wno-error=misleading-indentation \
+# need only for dreambox linux-meson64 4.9 + GCC 15
+export KCFLAGS += " -std=gnu17 \
+                    -Wno-error=misleading-indentation \
                     -Wno-error=aggressive-loop-optimizations \
                     -Wno-error=int-to-pointer-cast \
                     -Wno-error=restrict \
@@ -50,7 +51,7 @@ export KCFLAGS += " -Wno-error=misleading-indentation \
                     -Wno-address-of-packed-member \
 "
 
-S = "${WORKDIR}/rtl8723A_WiFi_linux_v4.1.6_7336.20140624"
+S = "${UNPACKDIR}/rtl8723A_WiFi_linux_v4.1.6_7336.20140624"
 
 do_compile () {
     unset CFLAGS CPPFLAGS CXXFLAGS LDFLAGS CC LD CPP

@@ -2,7 +2,7 @@ DESCRIPTION = "Livestreamersrv is a helper deamon for livestreamer"
 SECTION = "devel/python"
 MAINTAINER = "SatDreamGR"
 HOMEPAGE = "www.satdreamgr.com"
-LICENSE = "GPL-2.0-only"
+LICENSE = "GPL-2.0-or-later"
 require conf/license/license-gplv2.inc
 
 inherit allarch
@@ -14,8 +14,6 @@ inherit python3-dir gitpkgv
 SRCREV = "${AUTOREV}"
 
 SRC_URI = "git://github.com/oe-mirrors/livestreamersrv;protocol=https;branch=master"
-
-S = "${WORKDIR}/git"
 
 do_install:append() {
     install -d ${D}${sbindir}
@@ -32,4 +30,4 @@ do_install:append() {
 
 FILES:${PN} = "/"
 
-
+do_package_qa[noexec] = "1"

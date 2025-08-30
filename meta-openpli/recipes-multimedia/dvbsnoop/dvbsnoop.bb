@@ -11,7 +11,6 @@ PV = "1.4.56"
 PKGV = "1.4.56+git${GITPKGV}"
 
 SRC_URI = "git://github.com/OpenVisionE2/dvbsnoop.git;protocol=https;branch=master"
-
-S = "${WORKDIR}/git"
+CFLAGS += "-std=gnu17"
 
 inherit autotools

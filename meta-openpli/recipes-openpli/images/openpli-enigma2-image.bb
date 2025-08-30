@@ -58,17 +58,21 @@ IMAGE_INSTALL = " \
 	cdtextinfo \
 	cifs-utils \
 	cronie \
+	chrony \
 	distro-feed-configs \
 	dropbear \
 	e2fsprogs-e2fsck \
 	e2fsprogs-mke2fs \
 	e2fsprogs-tune2fs \
 	enigma2 \
+	nano \
+	mc \
+	mc-shell \
+	mc-helpers \
 	minilocale \
 	fuse-exfat \
 	gettext \
 	hdparm \
-	kernel-params \
 	libavahi-client \
 	libxcrypt-compat \
 	libcrypto-compat-0.9.7 \
@@ -85,11 +89,14 @@ IMAGE_INSTALL = " \
 	packagegroup-core-boot \
 	parted \
 	pigz \
-	python3-compat2 \
-	python3-ipaddress  \
-	python3-netifaces \
-	python3-pysmb \
-	python3-requests \
+	flip \
+	iproute2 \
+	ntfs-3g \
+	ofgwrite \
+	rtmpdump \
+	shellinabox \
+	unrar \
+	zip \
 	sdparm \
 	stb-hwclock \
 	settings-autorestore \
@@ -102,36 +109,38 @@ IMAGE_INSTALL = " \
 	vsftpd \
 	xz \
 	wget \
+	nmap \
 	mtd-utils \
 	mtd-utils-ubifs \
+	python3-future \
+	python3-pexpect \
+	python3-pillow \
+	python3-compat2 \
+	python3-ipaddress  \
+	python3-netifaces \
+	python3-pysmb \
+	python3-pycurl \
+	python3-requests \
+	packagegroup-base-nfs \
+	packagegroup-base-smbfs-client \
+	packagegroup-base-smbfs-server \
 	${ENIGMA2_PLUGINS} \
 	${ROOTFS_PKGMANAGE} \
-	${@bb.utils.contains("MACHINE_FEATURES", "smallflash", "", "${NORMAL_IMAGE}", d)} \
 	${@bb.utils.contains("TARGET_ARCH", "arm", "${GETEXTRA}", "", d)} \
 	${@bb.utils.contains("TARGET_ARCH", "aarch64", "${GETEXTRA}", "", d)} \
-	${@bb.utils.contains("MACHINE_FEATURES", "nowifi", "", "network-usb-drivers-meta", d)} \
-	${@bb.utils.contains("MACHINE_FEATURES", "emmc", "dosfstools mtools e2fsprogs-resize2fs partitions-by-name rsync" , "", d)} \
+	${@bb.utils.contains("MACHINE_FEATURES", "no_autofs", "" , "autofs", d)} \
+	${@bb.utils.contains("MACHINE_FEATURES", "emmc", "dosfstools mtools e2fsprogs-resize2fs partitions-by-name gptfdisk" , "", d)} \
 	${@bb.utils.contains("MACHINE_FEATURES", "fastboot", "dosfstools mtools android-tools" , "", d)} \
 	${@bb.utils.contains("MACHINE_FEATURES", "recovery", "recovery" , "", d)} \
+	${@bb.utils.contains("MACHINE_FEATURES", "chkrootmb", "multiboot-selector", "", d)} \
 	"
 
 GETEXTRA = "edid-decode"
 
-NORMAL_IMAGE = "\
-	flip \
-	iproute2 \
-	ntfs-3g \
-	ofgwrite \
-	python3-future \
-	python3-pexpect \
-	python3-pillow \
-	rtmpdump \
-	shellinabox \
-	unrar \
-	zip \
-	"
-
 export IMAGE_BASENAME = "openpli-enigma2"
+
+# Prevent locales-archive creation to save some space
+IMAGE_LOCALES_ARCHIVE = ""
 
 # Remove the mysterious var/lib/opkg/lists that appears to be the result
 # of the installer that populates the rootfs. I wanted to call this

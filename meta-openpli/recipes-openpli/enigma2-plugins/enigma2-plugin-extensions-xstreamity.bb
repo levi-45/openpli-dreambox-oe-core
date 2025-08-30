@@ -9,16 +9,13 @@ RDEPENDS:${PN} = "python3 python3-multiprocessing python3-requests \
 "
 
 SRCREV = "${AUTOREV}"
-PV = "3.71+git"
-PKGV = "3.71+git${GITPKGV}"
-PR = "r0"
+PV = "git"
+PKGV = "${GITPKGVTAG}"
+PR = "r1"
 
 inherit gitpkgv python3-compileall
 
 SRC_URI = "git://github.com/kiddac/XStreamity.git;protocol=https;branch=master"
-
-S = "${WORKDIR}/git"
-
 FILES:${PN} = " ${libdir}/enigma2/python/Components/Converter/* \
                 ${libdir}/enigma2/python/Components/Renderer/* \
                 ${libdir}/enigma2/python/Plugins/Extensions/XStreamity/*"

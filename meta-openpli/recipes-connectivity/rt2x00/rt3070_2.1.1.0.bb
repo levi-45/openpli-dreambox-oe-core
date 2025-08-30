@@ -12,7 +12,9 @@ SRC_URI = "http://www.ralinktech.com.tw/data/drivers/2009_0525_RT3070_Linux_STA_
 
 EXTRA_OEMAKE = "LINUX_SRC=${STAGING_KERNEL_DIR} KDIR=${STAGING_KERNEL_DIR}"
 
-S = "${WORKDIR}/2009_0525_RT3070_Linux_STA_v${PV}"
+export KCFLAGS += " -std=gnu17"
+
+S = "${UNPACKDIR}/2009_0525_RT3070_Linux_STA_v${PV}"
 
 do_install() {
     install -d ${D}${nonarch_base_libdir}/modules/${KERNEL_VERSION}/kernel/drivers/net/wireless

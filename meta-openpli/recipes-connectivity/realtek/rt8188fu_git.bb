@@ -4,7 +4,7 @@ SECTION = "kernel/modules"
 LICENSE = "GPL-2.0-only"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=b234ee4d69f5fce4486a80fdaf4a4263"
 
-DEPENDS ="bc-native"
+DEPENDS = "bc-native"
 
 inherit module
 SRCREV = "${AUTOREV}"
@@ -18,8 +18,9 @@ SRC_URI = "git://github.com/atvcaptain/rtl8188fu.git;protocol=https;branch=maste
 
 EXTRA_OEMAKE = "LINUX_SRC=${STAGING_KERNEL_DIR} KDIR=${STAGING_KERNEL_DIR}"
 
-# need only for dreambox linux-meson64 4.9 + GCC 14
-export KCFLAGS += " -Wno-error=misleading-indentation \
+# need only for dreambox linux-meson64 4.9 + GCC 15
+export KCFLAGS += " -std=gnu17 \
+                    -Wno-error=misleading-indentation \
                     -Wno-error=aggressive-loop-optimizations \
                     -Wno-error=int-to-pointer-cast \
                     -Wno-error=restrict \
@@ -43,9 +44,6 @@ export KCFLAGS += " -Wno-error=misleading-indentation \
                     -Wno-missing-attributes \
                     -Wno-address-of-packed-member \
 "
-
-S = "${WORKDIR}/git"
-
 do_compile () {
     unset CFLAGS CPPFLAGS CXXFLAGS LDFLAGS CC LD CPP
     oe_runmake 'M={D}${base_libdir}/modules/${KERNEL_VERSION}/kernel/drivers/net/wireless' \

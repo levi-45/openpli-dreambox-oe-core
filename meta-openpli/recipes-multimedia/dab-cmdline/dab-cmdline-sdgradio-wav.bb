@@ -2,6 +2,7 @@ SUMMARY = "DAB decoding library with example of its use"
 SECTION = "libs/multimedia"
 LICENSE = "GPL-2.0-only"
 require conf/license/license-gplv2.inc
+FILESEXTRAPATHS:append := "${THISDIR}/files:"
 
 SRCREV = "${AUTOREV}"
 
@@ -14,14 +15,16 @@ PV = "1.3+git"
 PKGV = "1.3+git${GITPKGV}"
 PR = "r1"
 
-SRC_URI = "git://github.com/satdreamgr/dab-cmdline.git;protocol=https;branch=sdgradio"
+SRC_URI = "git://github.com/satdreamgr/dab-cmdline.git;protocol=https;branch=sdgradio \
+		file://0001-build-required-CMake-to-3.5.patch \
+"
 
 EXTRA_OECMAKE = "-DAAC_OUT=ON -DRAWFILES=ON -DCMAKE_INSTALL_PREFIX=/usr/bin"
 
-S = "${WORKDIR}/git/sdgradio"
+S = "${UNPACKDIR}/${BP}/sdgradio"
 
 inherit cmake pkgconfig
 
 do_configure:prepend() {
-    sed -i -e 's:librtlsdr.so:librtlsdr.so.2:g' ${WORKDIR}/git/devices/rtlsdr-handler/rtlsdr-handler.cpp
+    sed -i -e 's:librtlsdr.so:librtlsdr.so.2:g' ${UNPACKDIR}/${BP}/devices/rtlsdr-handler/rtlsdr-handler.cpp
 }

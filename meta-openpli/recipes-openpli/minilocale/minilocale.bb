@@ -11,7 +11,7 @@ require conf/license/license-gplv2.inc
 
 SRC_URI = "file://locales.tar.gz file://locale.alias file://c-utf-8.tar.gz file://locale.sh"
 
-S = "${WORKDIR}/usr/lib/locale"
+S = "${UNPACKDIR}/usr/lib/locale"
 
 LOCALEDIR = "${libdir}/locale"
 LOCALEDIR2 = "/usr/share/locale"
@@ -25,6 +25,9 @@ RPROVIDES:${PN} += "${@" ".join("virtual-locale-%s" % p.split('_')[0] for p in d
 RPROVIDES:${PN} += "${@" ".join(map(lambda s: "locale-base-%s" % s, d.getVar('LANGUAGES').split())).lower().replace('_','-')}"
 RCONFLICTS:${PN} = "${@" ".join(map(lambda s: "locale-base-%s" % s, d.getVar('LANGUAGES').split())).lower().replace('_','-')}"
 RREPLACES:${PN}  = "${@" ".join(map(lambda s: "locale-base-%s" % s, d.getVar('LANGUAGES').split())).lower().replace('_','-')}"
+RPROVIDES:${PN} += "${@" ".join(map(lambda s: "glibc-binary-localedata-%s" % s, d.getVar('LANGUAGES').split())).lower().replace('_','-')}"
+RCONFLICTS:${PN} = "${@" ".join(map(lambda s: "glibc-binary-localedata-%s" % s, d.getVar('LANGUAGES').split())).lower().replace('_','-')}"
+RREPLACES:${PN}  = "${@" ".join(map(lambda s: "glibc-binary-localedata-%s" % s, d.getVar('LANGUAGES').split())).lower().replace('_','-')}"
 
 do_install() {
 	install -d ${D}${sysconfdir}/profile.d
@@ -33,7 +36,7 @@ do_install() {
 	install ${UNPACKDIR}/locale.alias ${D}${LOCALEDIR2}
 
 	install -d ${D}${LOCALEDIR}
-	cp -rp ${S}/* ${D}/${LOCALEDIR}
+	cp --no-preserve=ownership --recursive ${S}/* ${D}/${LOCALEDIR}
 
 	for langpath in $(find ${D}${LOCALEDIR}/* -maxdepth 1 -type d); do
 		lang=$(basename $langpath)

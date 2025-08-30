@@ -1,6 +1,6 @@
 inherit kernel machine_kernel_pr
 
-MACHINE_KERNEL_PR:append = ".14"
+MACHINE_KERNEL_PR:append = ".15"
 
 COMPATIBLE_MACHINE = "^(dm520|dm820|dm7080)$"
 
@@ -21,6 +21,7 @@ SRC_URI = " \
     file://kernel-add-support-for-gcc12.patch \
     file://kernel-add-support-for-gcc13.patch \
     file://kernel-add-support-for-gcc14.patch \
+    file://kernel-add-support-for-gcc15.patch \
     file://build-with-gcc12-fixes.patch \
     file://genksyms_fix_typeof_handling.patch \
     file://defconfig \
@@ -29,6 +30,9 @@ SRC_URI = " \
     file://0003-makefile-silence-packed-not-aligned-warn.patch \
     file://0004-fcrypt-fix-bitoperation-for-gcc.patch \
     file://fix-build-with-binutils-2.41.patch \
+    file://vtbl-ubi.patch \
+    file://chkroot-multiboot.cpio.xz;unpack=0 \
+    file://initramfs-mipsel.cpio.xz;unpack=0 \
 "
 
 SRC_URI[kernel.md5sum] = "967f72983655e2479f951195953e8480"
@@ -38,8 +42,8 @@ SRC_URI[stable-patch.sha256sum] = "d5492eeaadcf12aaad471011066e447907999035c2636
 SRC_URI[dream-patch.md5sum] = "75844e4a206fd6ec3aeeaf1380c60b99"
 SRC_URI[dream-patch.sha256sum] = "5ed3938ec088a868bcd344fd03adedbcefc5198c5255bd48f26fb87e1f8b7b07"
 
-S = "${WORKDIR}/linux-${PV}"
-B = "${WORKDIR}/build"
+S = "${UNPACKDIR}/linux-${PV}"
+B = "${UNPACKDIR}/build"
 
 do_configure:prepend() {
     rm -rf ${STAGING_KERNEL_DIR}/.config
@@ -55,6 +59,12 @@ CMDLINE = "${@bb.utils.contains('MACHINE', 'dm520', \
     'bmem=512M@512M memc1=768M console=ttyS0,1000000 root=/dev/mmcblk0p1 rootwait rootfstype=ext4', d)} \
 "
 
+kernel_do_configure:prepend() {
+	install -d ${B}/usr
+	install -m 0644 ${UNPACKDIR}/chkroot-multiboot.cpio.xz ${B}/
+	install -m 0644 ${UNPACKDIR}/initramfs-mipsel.cpio.xz ${B}/
+}
+
 BRCM_PATCHLEVEL = "4.0"
 
 LINUX_VERSION = "${PV}-${BRCM_PATCHLEVEL}-${MACHINE}"
@@ -62,6 +72,8 @@ KERNEL_IMAGETYPE = "${@bb.utils.contains('MACHINE', 'dm520', 'vmlinux.gz', 'vmli
 KERNEL_IMAGETYPES = "${@bb.utils.contains('MACHINE', 'dm520', '', 'vmlinux.gz', d)}"
 
 KERNEL_ENABLE_CGROUPS = "1"
+
+export KCFLAGS += " -std=gnu17"
 
 RDEPENDS:${KERNEL_PACKAGE_NAME}-image = "flash-scripts"
 

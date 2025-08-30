@@ -11,9 +11,6 @@ RCONFLICTS:${PN} = "kernel-module-8812au kernel-module-8814au"
 
 SRCREV = "${AUTOREV}"
 SRC_URI = "git://github.com/atvcaptain/rtl8812au.git;protocol=https;branch=v5.6.4.2"
-
-S = "${WORKDIR}/git"
-
 EXTRA_OEMAKE = "LINUX_SRC=${STAGING_KERNEL_DIR} KDIR=${STAGING_KERNEL_DIR}"
 
 do_compile () {
@@ -31,8 +28,9 @@ do_compile () {
         'LD=${KERNEL_LD}'
 }
 
-# need only for dreambox linux-meson64 4.9 + GCC 14
-export KCFLAGS += " -Wno-error=misleading-indentation \
+# need only for dreambox linux-meson64 4.9 + GCC 15
+export KCFLAGS += " -std=gnu17 \
+                    -Wno-error=misleading-indentation \
                     -Wno-error=aggressive-loop-optimizations \
                     -Wno-error=int-to-pointer-cast \
                     -Wno-error=restrict \

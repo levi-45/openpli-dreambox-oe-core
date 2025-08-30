@@ -10,10 +10,9 @@ RRECOMMENDS:${PN} = "enigma2-boxlogos"
 PV = "1.0+git"
 PKGV = "1.0+git${GITPKGV}"
 
-SRC_URI = "git://github.com/DimitarCC/E2-DarkOS-skin.git;protocol=https;branch=main"
-
-S = "${WORKDIR}/git"
-
+SRC_URI = "git://github.com/DimitarCC/E2-DarkOS-skin.git;protocol=https;branch=main  \
+		file://patch-skin-to-more-compatible.patch \
+"
 # files installed by both enigma2 and enigma2-plugin-skins-e2darkos
 do_install:append() {
         rm -f ${D}/usr/lib/enigma2/python/Components/Converter/CaidInfo2.py

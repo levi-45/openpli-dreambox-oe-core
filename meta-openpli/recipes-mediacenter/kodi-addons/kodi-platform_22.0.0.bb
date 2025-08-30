@@ -10,18 +10,15 @@ DEPENDS = "libtinyxml virtual/kodi"
 
 PV = "22.0.0"
 
-SRCREV = "809c5e9d711e378561440a896fcb7dbcd009eb3d"
+SRCREV = "280ff8a72696bcc8b2907000086afbda714b840c"
 SRC_URI = "git://github.com/xbmc/kodi-platform.git;protocol=https;branch=master \
            file://kodi-platform-01_crosscompile-badness.patch \
            file://kodi-platform-02_no-multi-lib.patch \
            file://kodi-platform-03_pkgconfig.patch \
           "
-
-S = "${WORKDIR}/git"
-
 inherit cmake pkgconfig
 
-OECMAKE_GENERATOR="Unix Makefiles"
+OECMAKE_GENERATOR = "Unix Makefiles"
 EXTRA_OECMAKE = " -DCMAKE_INSTALL_PREFIX_TOOLCHAIN=${STAGING_DIR_HOST}${prefix} \
                   -DCMAKE_INSTALL_LIBDIR=${libdir} \
                   -DCMAKE_INSTALL_LIBDIR_NOARCH=${libdir} \
@@ -45,7 +42,7 @@ do_install:append() {
                -e 's:${STAGING_DIR_HOST}:/:g' \
                -e 's:${STAGING_DIR_NATIVE}:/:g' \
                -e 's:${prefix}/${libdir}:${libdir}:g' \
-               -e 's:${WORKDIR}=::g' \ 
+               -e 's:${UNPACKDIR}=::g' \ 
             ${D}${libdir}/pkgconfig/*.pc
 }
 

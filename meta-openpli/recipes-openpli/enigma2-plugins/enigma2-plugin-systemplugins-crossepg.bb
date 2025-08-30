@@ -19,10 +19,7 @@ SRC_URI = "git://github.com/oe-alliance/e2openplugin-CrossEPG.git;protocol=https
            file://fix-build-with-fno-common.patch \
            file://fix-warning-message-installed-vs-shipped.patch \
 "
-
-S = "${WORKDIR}/git"
-
-CFLAGS:append = " -I${STAGING_INCDIR}/libxml2/ -I${STAGING_INCDIR}/${PYTHON_DIR}/"
+CFLAGS:append = " -std=gnu17 -I${STAGING_INCDIR}/libxml2/ -I${STAGING_INCDIR}/${PYTHON_DIR}/"
 
 do_compile() {
     echo ${PV} > ${S}/VERSION

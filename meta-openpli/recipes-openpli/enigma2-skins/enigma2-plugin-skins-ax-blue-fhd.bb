@@ -7,21 +7,21 @@ inherit gitpkgv python3-compileall
 
 PV = "3.4+git"
 PKGV = "3.4+git${GITPKGV}"
-VER="3.4"
+VER = "3.4"
 
 RDEPENDS:${PN} = "enigma2-plugin-extensions-weatherplugin"
 
-SRC_URI="git://github.com/stein17/Skins-for-openATV.git;protocol=https;branch=python3"
+SRC_URI = "git://github.com/stein17/Skins-for-openATV.git;protocol=https;branch=python3"
 
 FILES:${PN} = "${libdir} /usr/share"
 
-S = "${WORKDIR}/git/AX-Blue-FHD-4ATV"
+S = "${UNPACKDIR}/${BP}/AX-Blue-FHD-4ATV"
 
 do_install() {
     install -d ${D}${libdir}
     install -d ${D}/usr/share
-    cp -rp ${S}/usr/lib/* ${D}${libdir}/
-    cp -rp ${S}/usr/share/* ${D}/usr/share/
+    cp --no-preserve=ownership --recursive ${S}/usr/lib/* ${D}${libdir}/
+    cp --no-preserve=ownership --recursive ${S}/usr/share/* ${D}/usr/share/
     chmod -R a+rX ${D}/usr/share/enigma2/
 }
 

@@ -1,6 +1,6 @@
 inherit kernel machine_kernel_pr
 
-MACHINE_KERNEL_PR:append = ".26"
+MACHINE_KERNEL_PR:append = ".27"
 
 COMPATIBLE_MACHINE = "^(dm900|dm920)$"
 
@@ -32,6 +32,7 @@ SRC_URI = " \
     file://move-default-dialect-to-SMB3.patch \
     file://fix-multiple-defs-yyloc.patch \
     file://fix-build-with-binutils-2.41.patch \
+    file://chkroot-multiboot.cpio.xz;unpack=0 \
 "
 
 SRC_URI[kernel.md5sum] = "b621207b3f6ecbb67db18b13258f8ea8"
@@ -43,12 +44,17 @@ SRC_URI[dream-patch.sha256sum] = "85a18df9f07e221c0fd305cc213e5557d9006a40b3229b
 
 require linux-dreambox-3.14.inc
 
-S = "${WORKDIR}/linux-${PV}"
+S = "${UNPACKDIR}/linux-${PV}"
 B = "${UNPACKDIR}/build"
 
 CMDLINE = "bmem=640M@384M bmem=384M@2048M console=ttyS0,1000000 root=/dev/mmcblk0p2 rootwait rootfstype=ext4 coherent_pool=2M"
 
 DEFCONFIG = "${MACHINE}"
+
+kernel_do_configure:prepend() {
+	install -d ${B}/usr
+	install -m 0644 ${UNPACKDIR}/chkroot-multiboot.cpio.xz ${B}/
+}
 
 BRCM_PATCHLEVEL = "1.17"
 

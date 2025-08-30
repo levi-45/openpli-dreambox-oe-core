@@ -12,12 +12,11 @@ PV = "git"
 PKGV = "git${GITPKGV}"
 
 SRC_URI = "git://github.com/openwrt/odhcp6c.git;protocol=https;branch=master \
+           file://0001-build-required-CMake-to-3.5.patch \
            file://ifup \
            file://ifdown \
            file://odhcp6c-update \
           "
-
-S = "${WORKDIR}/git"
 
 EXTRA_OEMAKE = " \
     'CC=${CC}' \

@@ -9,15 +9,12 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=7246f848faa4e9c9fc0ea91122d6e680"
 
 DEPENDS = "libxml2 bash-completion"
 
-inherit python3-dir setuptools3 gittag
+inherit python3-dir setuptools3 gitpkgv
 
-PV = "git"
-PKGV = "${GITPKGVTAG}"
+PV = "2021.12.17+git"
+PKGV = "2021.12.17+${GITPKGVTAG}"
 
 SRC_URI = "git://github.com/ytdl-org/youtube-dl.git;protocol=https;branch=master"
-
-S = "${WORKDIR}/git"
-
 EXTRA_OEMAKE = "PYTHON=${PYTHON}"
 
 do_compile:prepend() {
@@ -33,6 +30,7 @@ do_install:append() {
     rm -f ${D}${PYTHON_SITEPACKAGES_DIR}/youtube_dl*egg-info/SOURCES.txt
     rm -f ${D}${PYTHON_SITEPACKAGES_DIR}/youtube_dl*egg-info/dependency_links.txt
     rm -f ${D}${PYTHON_SITEPACKAGES_DIR}/youtube_dl*egg-info/top_level.txt
+    rm -rf ${D}${PYTHON_SITEPACKAGES_DIR}/youtube_dl*dist-info/*
     chmod 755 ${D}/usr/bin/youtube-dl
 }
 

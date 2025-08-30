@@ -13,14 +13,15 @@ SRC_URI = " \
     file://CHECKSM_IPV6_H.patch \
     "
 
-S = "${WORKDIR}/rtl8188C_8192C_usb_linux_v4.0.2_9000.20130911"
+S = "${UNPACKDIR}/rtl8188C_8192C_usb_linux_v4.0.2_9000.20130911"
 
 inherit module siteinfo
 
 EXTRA_OEMAKE = "CONFIG_RTL8192CU=m KDIR=${STAGING_KERNEL_DIR}"
 
-# need only for dreambox linux-meson64 4.9
-export KCFLAGS += " -Wno-error=misleading-indentation \
+# need only for dreambox linux-meson64 4.9 + GCC 15
+export KCFLAGS += " -std=gnu17 \
+                    -Wno-error=misleading-indentation \
                     -Wno-error=aggressive-loop-optimizations \
                     -Wno-error=int-to-pointer-cast \
                     -Wno-error=restrict \

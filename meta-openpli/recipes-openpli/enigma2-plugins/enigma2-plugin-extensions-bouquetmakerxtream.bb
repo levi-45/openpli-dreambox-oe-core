@@ -5,18 +5,15 @@ MAINTAINER = "kiddac"
 PRIORITY = "optional"
 require conf/license/license-gplv2.inc
 
-SRCREV="${AUTOREV}"
-PV = "git${SRCPV}"
+SRCREV = "${AUTOREV}"
+PV = "git"
 PKGV = "${GITPKGV}"
 
-inherit gittag allarch
+inherit gitpkgv allarch
 
 RDEPENDS:${PN} = "python3 python3-requests python3-pillow"
 
 SRC_URI = "git://github.com/kiddac/Bouquet_Maker_Xtream.git;protocol=https;branch=master"
-
-S = "${WORKDIR}/git"
-
 FILES:${PN} = " ${libdir}/enigma2/python/Plugins/Extensions/BouquetMakerXtream \
                 ${libdir}/enigma2/python/Components/Renderer"
 

@@ -7,9 +7,6 @@ SRC_URI += " file://bootlogo.scr"
 inherit allarch opendreambox-git
 
 OPENDREAMBOX_PROJECT = "bootlogo"
-
-S = "${WORKDIR}/git"
-
 do_configure() {
 }
 

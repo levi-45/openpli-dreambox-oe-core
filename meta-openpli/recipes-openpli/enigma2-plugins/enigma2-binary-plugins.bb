@@ -11,9 +11,9 @@ PACKAGES += "\
 	enigma2-plugin-systemplugins-vps \
 	"
 
-inherit gitpkgv python3native pkgconfig gettext python3targetconfig
+inherit autotools-brokensep gitpkgv pkgconfig gettext python3targetconfig
 
-PV = "git${SRCPV}"
+PV = "git"
 PKGV = "git${GITPKGV}"
 
 # make the origin overridable from OE config, for local mirroring
@@ -41,13 +41,6 @@ FILES:${PN}-dbg = "${prefix}/src/debug"
 PACKAGES += "${PN}-meta ${PN}-build-dependencies"
 
 CFLAGS += "-I${STAGING_INCDIR}/tirpc"
-LDFLAGS += "-ltirpc"
-CXXFLAGS = " -std=c++11"
-
-inherit autotools-brokensep python3targetconfig
-
-S = "${WORKDIR}/git"
-
 DEPENDS = " \
 	python3-pyopenssl \
 	streamripper \
@@ -66,6 +59,7 @@ DEPENDS = " \
 	dvdbackup \
 	libtirpc \
 	png-util \
+	libtirpc \
 	"
 
 
@@ -110,14 +104,9 @@ python populate_packages:prepend () {
             elif line.startswith('Maintainer: '):
                 d.setVar('MAINTAINER:' + full_package, line[12:])
 
-    mydir = d.getVar('D', True) + "/../git/"
+    mydir = d.getVar('S', True) + "/"
     for package in d.getVar('PACKAGES', True).split():
         getControlLines(mydir, d, package.split('-')[-1])
-}
-
-do_install:append() {
-	# remove leftover webinterface garbage
-	rm -rf ${D}${libdir}/enigma2/python/Plugins/Extensions/WebInterface
 }
 
 # Nothing of this recipe should end up in sysroot, so blank it away.

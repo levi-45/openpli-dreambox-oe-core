@@ -5,15 +5,12 @@ SECTION = "base"
 
 require conf/license/license-gplv2.inc
 
-inherit allarch gittag python3-compileall
+inherit allarch gitpkgv python3-compileall
 
 PV = "git"
 PKGV = "${GITPKGVTAG}"
 
-SRC_URI="git://github.com/enigmawelt/enigmawelt.de.git;protocol=https;branch=main"
-
-S = "${WORKDIR}/git"
-
+SRC_URI = "git://github.com/enigmawelt/enigmawelt.de.git;protocol=https;branch=main"
 FILES:${PN} = "${libdir}"
 
 do_install() {

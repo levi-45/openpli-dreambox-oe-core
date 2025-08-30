@@ -17,7 +17,7 @@ LICENSE = "GPL-2.0-or-later"
 
 FILESEXTRAPATHS:prepend := "${THISDIR}/debian:"
 
-LIC_FILES_CHKSUM = "file://${WORKDIR}/sources-unpack/copyright;md5=b6e7f553d5b9c366d42bfceaf296636f"
+LIC_FILES_CHKSUM = "file://${UNPACKDIR}/copyright;md5=b6e7f553d5b9c366d42bfceaf296636f"
 
 PV = "1.20"
 
@@ -32,8 +32,8 @@ SRC_URI[sha256sum] = "4cd45e581c71d7bcf1ab824a47fb9263fe5371ce702879a7d2efa08d27
 
 do_compile() {
 	cd ${S}
-	${CC} -D_FORTIFY_SOURCE=2 -g -O2 -fPIE -fstack-protector-strong -Wformat -Werror=format-security -Wall -pedantic -DBSD -DIX -DSTDINCLUDE -c -DNDEBUG -O -DVERSION=\"1.20\" flip.c
-	${CC} -fPIE -pie -Wl,-z,relro -Wl,-z,now -Wl,--as-needed flip.o -o flip
+	${CC} -std=gnu17 -D_FORTIFY_SOURCE=2 -g -O2 -fPIE -fstack-protector-strong -Wformat -Werror=format-security -Wall -pedantic -DBSD -DIX -DSTDINCLUDE -c -DNDEBUG -O -DVERSION=\"1.20\" flip.c
+	${CC} -std=gnu17 -fPIE -pie -Wl,-z,relro -Wl,-z,now -Wl,--as-needed flip.o -o flip
 }
 
 do_install() {

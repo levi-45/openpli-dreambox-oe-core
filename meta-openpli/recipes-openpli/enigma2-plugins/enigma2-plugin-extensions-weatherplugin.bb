@@ -8,15 +8,12 @@ PV = "2.2+git"
 PKGV = "2.2+git${GITPKGV}"
 
 SRC_URI = "git://github.com/fairbird/WeatherPlugin.git;protocol=https;branch=master"
-
-S = "${WORKDIR}/git"
-
 FILES:${PN} = "${prefix}/"
 
 do_install() {
 	install -d ${D}${prefix}
 	cp -r ${S}${prefix}/* ${D}${prefix}/
-	python3 -m compileall -o2 -b ${D}${prefix}
+	python3 -m compileall -o2 -b ${D}${prefix} -d /
 }
 
 INSANE_SKIP:${PN} += "already-stripped"

@@ -20,7 +20,7 @@ SRC_URI:dm7080 += "https://source.mynonpublic.com/dreambox/dm7080/blindscan-util
 SRC_URI:dreamone += "https://source.mynonpublic.com/dreambox/blindscan-utils_${PV}_${DEFAULTTUNE}.tar.xz;name=${DEFAULTTUNE}-pyro"
 SRC_URI:dreamtwo += "https://source.mynonpublic.com/dreambox/blindscan-utils_${PV}_${DEFAULTTUNE}.tar.xz;name=${DEFAULTTUNE}-pyro"
 
-S = "${WORKDIR}/blindscan-utils_${PV}_${DEFAULTTUNE}"
+S = "${UNPACKDIR}/blindscan-utils_${PV}_${DEFAULTTUNE}"
 
 PACKAGES = "${PN}"
 
@@ -39,3 +39,5 @@ do_install() {
 
 INHIBIT_PACKAGE_STRIP = "1"
 INHIBIT_PACKAGE_DEBUG_SPLIT = "1"
+
+INSANE_SKIP = "ldflags 32bit-time"

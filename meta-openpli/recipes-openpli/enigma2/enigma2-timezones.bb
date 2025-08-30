@@ -7,12 +7,9 @@ inherit gitpkgv allarch
 PV = "git"
 PKGV = "git${GITPKGV}"
 
-SRC_URI="git://github.com/oe-alliance/oe-alliance-tuxbox-common.git;protocol=https;branch=master"
+SRC_URI = "git://github.com/oe-alliance/oe-alliance-tuxbox-common.git;protocol=https;branch=master"
 
 FILES:${PN} = "/"
-
-S = "${WORKDIR}/git"
-
 do_install() {
     install -d ${D}/etc/tuxbox/
 

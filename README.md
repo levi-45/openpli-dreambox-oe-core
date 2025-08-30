@@ -8,21 +8,22 @@ Based on OpenPLi, also derived from Hains source.<br>
 # WARRNING : The compile images for DM800se and DM500HD to External flash only For [Multiboot]. Because it is more than 64MB
  ***************************************************************************************************************************
 
-Thanks to OpenPLi, Open-Alliance and Hains.
+Thanks to OpenPLi, openATV, Open-Alliance and Hains.
 
 https://github.com/OpenPLi/openpli-oe-core<br>
+https://github.com/openatv/enigma2<br>
 https://github.com/Hains/openpli-dm920-python3<br>
 https://github.com/oe-alliance/oe-alliance-core
 
 
 -Submodules bitbake, openembedded-core and meta-openembedded from master branch,<br>
-&nbsp;with git snapshot of January 27, 2025.<br>
--GCC 14.2.0<br>
--Glibc 2.40<br>
+&nbsp;with git snapshot of August 15, 2025.<br>
+-GCC 15.2.0<br>
+-Glibc 2.42<br>
 -ffmpeg 7.1<br>
--GStreamer 1.24.10<br>
--Python 3.13.1<br>
--OpenSSL 3.4.0<br>
+-GStreamer 1.26.5<br>
+-Python 3.13.6<br>
+-OpenSSL 3.5.2<br>
 -Busybox 1.37.0<br>
 and more.<br>
 <br>
@@ -30,22 +31,25 @@ and more.<br>
 Feel free to send pull-request.
 <br>
 <br>
-Note Ubuntu 24.04 LTS and 24.10!<br>
 
-# Due to new security features:
+# Note Ubuntu: Due to new security features:
 
 See:
 https://ubuntu.com/blog/whats-new-in-security-for-ubuntu-24-04-lts
 
-If you get this error (Operation not permitted) You need to give
+Modify AppArmor config file with the following contents to fix error (Operation not permitted):
 ```
-sudo apparmor_parser -R /etc/apparmor.d/unprivileged_userns
-sudo mv /etc/apparmor.d/unprivileged_userns /etc/apparmor.d/disable
+echo 'kernel.apparmor_restrict_unprivileged_userns=0' | sudo tee /etc/sysctl.d/60-apparmor-namespace.conf > /dev/null && sudo sysctl --system
+
+sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
 ```
+# Note: Solution for compile/build nodejs problem:
+https://github.com/fairbird/openpli-dreambox-oe-core/issues/116#event-18499432564
+
 # Dependencies:
 1. Install required packages
 ```
-sudo apt-get install -y autoconf automake bison bzip2 chrpath cmake coreutils cpio curl cvs debianutils default-jre default-jre-headless diffstat flex g++ gawk gcc gcc-12 gcc-multilib g++-multilib gettext git git-lfs gzip help2man info iputils-ping java-common libc6-dev libglib2.0-dev libncurses-dev libperl4-corelibs-perl libproc-processtable-perl libsdl1.2-dev libserf-dev libtool libxml2-utils make ncurses-bin patch perl pkg-config psmisc python3 python3-git python3-jinja2 python3-pexpect python3-pip python3-setuptools quilt socat sshpass subversion tar texi2html texinfo unzip wget xsltproc xterm xz-utils zip zlib1g-dev zstd fakeroot lz4 lib32ncurses-dev genromfs guile-2.2-libs dialog php-cli
+sudo apt-get install -y autoconf automake bison bzip2 chrpath cmake coreutils cpio curl cvs debianutils default-jre default-jre-headless diffstat flex g++ gawk gcc gcc-12 gcc-multilib g++-multilib gettext git git-lfs gzip help2man info iputils-ping java-common libc6-dev libc6-dev-i386 libglib2.0-dev libncurses-dev libperl4-corelibs-perl libproc-processtable-perl libsdl1.2-dev libserf-dev libtool libxml2-utils make ncurses-bin patch perl pkg-config psmisc python3 python3-git python3-jinja2 python3-pexpect python3-pip python3-setuptools quilt socat sshpass subversion tar texi2html texinfo unzip wget xsltproc xterm xz-utils zip zlib1g-dev zstd fakeroot lz4 lib32ncurses-dev genromfs guile-2.2-libs dialog php-cli
 ```
 2. Set your shell to `/bin/bash`
 ```
@@ -75,7 +79,7 @@ cd openpli-dreambox-oe-core
 
 ![Selection_002](https://user-images.githubusercontent.com/1761779/130413735-8f2a0caf-e3f7-4264-b33e-b474ac13d245.png)
 
-When the build is finished, the image openpli-enigma2-GCC-13.2-(box-name).rootfs.tar.(xz_or_bz2_or_zip) is located in the:
+When the build is finished, the image openpli-enigma2-GCC-x.x-(box-name).rootfs.tar.(xz_or_bz2_or_zip) is located in the:
 ```
 build/tmp/deploy/images/<box name>/
 ```

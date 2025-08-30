@@ -1,7 +1,7 @@
 SUMMARY = "Linux kernel for ${MACHINE}"
 SECTION = "kernel"
 LICENSE = "GPL-2.0-only"
-LIC_FILES_CHKSUM = "file://${WORKDIR}/linux-${PV}/COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
+LIC_FILES_CHKSUM = "file://${UNPACKDIR}/linux-${PV}/COPYING;md5=d7810fab7487fb0aad327b76f1be7cd7"
 
 PRECOMPILED_ARCH = "${MACHINE}"
 PRECOMPILED_ARCH:dm7020hdv2 = "dm7020hd"
@@ -53,6 +53,7 @@ SRC_URI = " \
     file://kernel-add-support-for-gcc12.patch \
     file://kernel-add-support-for-gcc13.patch \
     file://kernel-add-support-for-gcc14.patch \
+    file://kernel-add-support-for-gcc15.patch \
     file://build-with-gcc12-fixes.patch \
     file://misc_latin1_to_utf8_conversions.patch \
     file://0001-dvb_frontend-backport-multistream-support.patch \
@@ -63,6 +64,8 @@ SRC_URI = " \
     file://0015-fcrypt-fix-bitoperation-for-gcc.patch \
     file://devinitdata-gcc11.patch \
     file://fix-build-with-binutils-2.41.patch \
+    file://vtbl-ubi.patch \
+    file://initramfs-mipsel.cpio.xz;unpack=0 \
 "
 
 PACKAGES_DYNAMIC = "kernel-*"
@@ -92,8 +95,8 @@ SRC_URI[dream-patch.sha256sum] = "8914df36eb1f6a270d2b32c46d93cb81bbaae02604fba6
 SRC_URI[unionfs.md5sum] = "06e7c9f6cafd49b72184be851116c511"
 SRC_URI[unionfs.sha256sum] = "ce6ffa3c17a11dcca24196c11f6efc95c59b65a5b99958e73e8d4cc8e4b1f1ef"
 
-S = "${WORKDIR}/linux-3.2"
-B = "${WORKDIR}/build"
+S = "${UNPACKDIR}/linux-3.2"
+B = "${UNPACKDIR}/build"
 
 export OS = "Linux"
 KERNEL_OBJECT_SUFFIX = "ko"
@@ -103,7 +106,8 @@ KERNEL_IMAGEDEST = "boot"
 
 FILES:${KERNEL_PACKAGE_NAME}-image = "${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}.gz"
 
-export KCFLAGS = " -Wno-error=incompatible-pointer-types \
+export KCFLAGS = " -std=gnu17 \
+                   -Wno-error=incompatible-pointer-types \
                    -Wno-error=declaration-missing-parameter-type \
                    -Wno-error=unused-label \
                    -Wno-error=enum-compare \
@@ -120,6 +124,11 @@ export KCFLAGS = " -Wno-error=incompatible-pointer-types \
                    -Wno-error=unused-const-variable \
                    -Wno-error=maybe-uninitialized \           
 "
+
+kernel_do_configure:prepend() {
+	install -d ${B}/usr
+	install -m 0644 ${UNPACKDIR}/initramfs-mipsel.cpio.xz ${B}/
+}
 
 do_install:append() {
         ${STRIP} ${D}/${KERNEL_IMAGEDEST}/${KERNEL_IMAGETYPE}-${KERNEL_VERSION}
@@ -182,7 +191,7 @@ pkg_postrm:kernel () {
 
 CMDLINE_CONSOLE = "console=${@d.getVar("KERNEL_CONSOLE") or "ttyS0"}"
 CMDLINE_JFFS2 = "root=/dev/mtdblock3 rootfstype=jffs2 rw ${CMDLINE_CONSOLE}"
-CMDLINE_UBI = "ubi.mtd=root root=ubi0:rootfs rootfstype=ubifs rw ${CMDLINE_CONSOLE}"
+CMDLINE_UBI = "ubi.mtd=root root=ubi0:rootfs rootfstype=ubifs rw usbcore.autosuspend=-1 ${CMDLINE_CONSOLE}"
 CMDLINE = "${@bb.utils.contains('IMAGE_FSTYPES', 'ubinfi', '${CMDLINE_UBI}', '${CMDLINE_JFFS2}', d)}"
 
 do_rm_work() {

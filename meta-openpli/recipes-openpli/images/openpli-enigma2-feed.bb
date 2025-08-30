@@ -8,12 +8,16 @@ require conf/license/openpli-gplv2.inc
 # Depend on the image, so that it gets build
 DEPENDS = "openpli-enigma2-image package-index-feed"
 
+PROVIDES = "${PN} \
+	enigma2-plugin-extensions-fancontrol2 \
+	"
+
 OPTIONAL_PACKAGES_BROKEN = ""
 OPTIONAL_PACKAGES ?= ""
 OPTIONAL_BSP_PACKAGES ?= ""
 OPTIONAL_PACKAGES += " \
-	astra-sm \
 	autofs \
+	astra-sm \
 	autossh \
 	bitratecalc \
 	btrfs-tools \
@@ -23,12 +27,14 @@ OPTIONAL_PACKAGES += " \
 	cups \
 	davfs2 \
 	diffutils \
+	dabstreamer \
 	dosfstools \
 	dvb-apps \
 	dvblast \
 	dvbsnoop \
 	dvdfs \
 	edid-decode \
+	eti-tools \
 	evtest \
 	exfatprogs \
 	exteplayer3 \
@@ -39,10 +45,12 @@ OPTIONAL_PACKAGES += " \
 	google-dns \
 	grep \
 	gstplayer \
+	gstplayer2 \
 	hddtemp \
 	hdparm \
 	htop \
 	flip \
+	ifuse \
 	inadyn-mt \
 	inetutils \
 	iperf3 \
@@ -65,12 +73,14 @@ OPTIONAL_PACKAGES += " \
 	net-tools \
 	ntfs-3g \
 	ntp \
+	nodejs \
 	openmultiboot \
 	openresolv \
 	ofgwrite \
 	openresolv \
 	openssh \
 	openvpn \
+	libpcsc-perl \
 	parted \
 	picocom \
 	ppp \
@@ -111,11 +121,18 @@ OPTIONAL_PACKAGES += " \
 	sshpass \
 	strace \
 	streamlinksrv \
+	streamlink \
+	tsniv2ni \
 	tcpdump \
 	tmux \
 	transmission \
+	tsanalyze \
+	tsduck \
+	mediamtx \
 	udpxy \
+	upx \
 	ubuntu-font-family \
+	ushare \
 	v4l-utils \
 	vim \
 	wget \
@@ -127,7 +144,6 @@ OPTIONAL_PACKAGES += " \
 	zerotier \
 	zip \
 	zsh \
-	network-usb-drivers-meta \
 	enigma2-plugin-drivers-network-usb-ath9k-htc \
 	enigma2-plugin-drivers-network-usb-r8723a \
 	enigma2-plugin-drivers-network-usb-rt8723bs \
@@ -165,6 +181,7 @@ ENIGMA2_OPTIONAL = " \
 	enigma2-plugin-skins-ax-blue-fhd \
 	enigma2-plugin-skins-blueaccents-fhd \
 	enigma2-plugin-skins-blue-line-oe \
+	enigma2-plugin-skins-gradient-fhd \
 	enigma2-plugin-skins-glamouraurafhd \
 	enigma2-plugin-skins-madmax-impossible \
 	enigma2-plugin-skins-steampunk \
@@ -173,6 +190,7 @@ ENIGMA2_OPTIONAL = " \
 	enigma2-plugin-extensions-arabicsavior \
 	enigma2-plugin-extensions-backupflash \
 	enigma2-plugin-extensions-dlnaserver \
+	enigma2-plugin-extensions-e2embyclient \
 	enigma2-plugin-extensions-keyadder \
 	enigma2-plugin-extensions-raedquicksignal \
 	enigma2-plugin-extensions-backupsuite \
@@ -180,6 +198,7 @@ ENIGMA2_OPTIONAL = " \
 	enigma2-plugin-extensions-bouquetmakerxtream \
 	enigma2-plugin-extensions-e2iplayer \
 	enigma2-plugin-extensions-e2iplayer-deps \
+	enigma2-plugin-extensions-enhancedmoviecenter \
 	enigma2-plugin-extensions-foreca \
 	enigma2-plugin-extensions-hetweer \
 	enigma2-plugin-extensions-ppanel \
@@ -187,6 +206,7 @@ ENIGMA2_OPTIONAL = " \
 	enigma2-plugin-extensions-oscamstatus \
 	enigma2-plugin-extensions-sdgradio \
 	enigma2-plugin-extensions-subssupport \
+	enigma2-plugin-extensions-xklass \
 	enigma2-plugin-extensions-xtraevent \
 	enigma2-plugin-extensions-enigmalight \
 	enigma2-plugin-extensions-enigmawelt \
@@ -199,7 +219,6 @@ ENIGMA2_OPTIONAL = " \
 	enigma2-plugin-extensions-mediaplayer2 \
 	enigma2-plugin-extensions-modifyplifullhd \
 	enigma2-plugin-extensions-jediepgxtream \
-	enigma2-plugin-extensions-jedimakerxtream \
 	enigma2-plugin-extensions-moviemanager \
 	enigma2-plugin-extensions-oaweather \
 	enigma2-plugin-extensions-openmultiboot \
@@ -216,6 +235,7 @@ ENIGMA2_OPTIONAL = " \
 	enigma2-plugin-extensions-yahooweather \
 	enigma2-plugin-extensions-yampmusicplayer \
 	enigma2-plugin-extensions-weatherplugin \
+	enigma2-plugin-extensions-plutotv \
 	enigma2-plugin-systemplugins-m3uiptv \
 	enigma2-plugin-systemplugins-netspeedtest \
 	enigma2-plugin-systemplugins-extnumberzap \
@@ -229,6 +249,7 @@ ENIGMA2_OPTIONAL = " \
 	enigma2-plugin-systemplugins-newvirtualkeyboard \
 	enigma2-plugin-systemplugins-satipserver \
 	enigma2-plugin-systemplugins-serviceapp \
+	enigma2-plugin-extensions-estalker \
 	alsa-plugins \
 	enigma2-plugins \
 	enigma2-plugins-alliance \

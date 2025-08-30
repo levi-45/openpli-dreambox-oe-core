@@ -1,7 +1,7 @@
 SUMMARY = "Hardware drivers for Dreambox"
 SECTION = "base"
 LICENSE = "CLOSED"
-DEPENDS = "virtual/kernel virtual/${TARGET_PREFIX}gcc"
+DEPENDS = "virtual/kernel ${MLPREFIX}gcc-cross-${TARGET_ARCH}"
 PRIORITY = "required"
 INC_PR = "r8"
 require conf/license/license-close.inc
@@ -16,8 +16,7 @@ SRC_URI = " \
             file://modules \
 "
 
-S = "${WORKDIR}/sources"
-UNPACKDIR = "${S}"
+S = "${UNPACKDIR}"
 
 do_compile() {
 }

@@ -3,24 +3,24 @@ MAINTAINER = "madhouse"
 
 require conf/license/license-gplv2.inc
 
-inherit gittag python3-compileall
+inherit gitpkgv python3-compileall
 
 PV = "git"
 PKGV = "${GITPKGVTAG}"
 
 RDEPENDS:${PN} = "enigma2-plugin-extensions-oaweather"
 
-SRC_URI="git://github.com/m4dhouse/MadMax-Atv.git;protocol=https;branch=main"
+SRC_URI = "git://github.com/m4dhouse/MadMax-Atv.git;protocol=https;branch=main"
 
 FILES:${PN} = "${libdir} /usr/share"
 
-S = "${WORKDIR}/git/MadMax-Impossible-Skin"
+S = "${UNPACKDIR}/${BP}/MadMax-Impossible-Skin"
 
 do_install() {
     install -d ${D}${libdir}
     install -d ${D}/usr/share
-    cp -rp ${S}/usr/lib/* ${D}${libdir}/
-    cp -rp ${S}/usr/share/* ${D}/usr/share/
+    cp --no-preserve=ownership --recursive ${S}/usr/lib/* ${D}${libdir}/
+    cp --no-preserve=ownership --recursive ${S}/usr/share/* ${D}/usr/share/
     chmod -R a+rX ${D}/usr/share/enigma2/
 }
 

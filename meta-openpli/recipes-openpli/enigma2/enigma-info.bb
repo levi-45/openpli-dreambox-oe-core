@@ -34,12 +34,13 @@ inherit python3-dir
 
 INFOFILE = "${libdir}/enigma.info"
 
+do_populate_sysroot[depends] += "rust-native:do_populate_sysroot upx-native:do_populate_sysroot"
+
 inherit linux-kernel-base
 
 do_install[nostamp] = "1"
 
 do_install() {
-    YOCTO=`cd "${COREBASE}" && git describe --match=yocto* | cut -d '-' -f 2`
     # Kernel version
     KERNEL_VERSION="${@get_kernelversion_headers('${STAGING_KERNEL_DIR}') or oe.utils.read_file('${PKGDATA_DIR}/kernel-depmod/kernel-abiversion')}"
 
@@ -75,11 +76,19 @@ do_install() {
         DRIVERSDATE="20210518"
     fi
 
+    if [ -e ${COMPONENTS_DIR}/${BUILD_ARCH}/upx-native${bindir}/upx ]; then
+        UPX_VER=`${COMPONENTS_DIR}/${BUILD_ARCH}/upx-native${bindir}/upx --version | awk 'NR==1{print $2}'`
+    fi
+    if [ -e ${COMPONENTS_DIR}/${BUILD_ARCH}/rust-native${bindir}/rustc ]; then
+        RUST_VER=`${COMPONENTS_DIR}/${BUILD_ARCH}/rust-native${bindir}/rustc --version | awk 'NR==1{print $2}'`
+    fi
+
     install -d ${D}${libdir}
     printf "architecture='${DEFAULTTUNE}'\n" > ${D}${INFOFILE}
     printf "avjack=${HAVE_AV_JACK}\n" >> ${D}${INFOFILE}
     printf "blindscanbinary='${BLINDSCAN_BINARY}'\n" >> ${D}${INFOFILE}
     printf "brand='${BRAND_OEM}'\n" >> ${D}${INFOFILE}
+    printf "chkrootmb=${HAVE_CHKROOTMB}\n" >> ${D}${INFOFILE}
     printf "ci=${HAVE_CI}\n" >> ${D}${INFOFILE}
     printf "compiledate='${DATE}'\n" >> ${D}${INFOFILE}
     printf "dboxlcd=${SUPPORT_DBOXLCD}\n" >> ${D}${INFOFILE}
@@ -95,6 +104,7 @@ do_install() {
     printf "fhdskin=${HAVE_FHDSKIN}\n" >> ${D}${INFOFILE}
     printf "fpu='${TARGET_FPU}'\n" >> ${D}${INFOFILE}
     printf "friendlyfamily='${FRIENDLY_FAMILY}'\n" >> ${D}${INFOFILE}
+    printf "hasUBIMB=${HAVE_UBIMB}\n" >> ${D}${INFOFILE}
     printf "hdmi=${HAVE_HDMI}\n" >> ${D}${INFOFILE}
     printf "hdmifhdin=${HAVE_HDMI_IN_FHD}\n" >> ${D}${INFOFILE}
     printf "hdmihdin=${HAVE_HDMI_IN_HD}\n" >> ${D}${INFOFILE}
@@ -135,6 +145,7 @@ do_install() {
     printf "rcname='${RCNAME}'\n" >> ${D}${INFOFILE}
     printf "rctype=${RCTYPE}\n" >> ${D}${INFOFILE}
     printf "rootfile='${ROOTFS_FILE}'\n" >> ${D}${INFOFILE}
+    printf "rust='${RUST_VER}'\n" >> ${D}${INFOFILE}
     printf "scart=${HAVE_SCART}\n" >> ${D}${INFOFILE}
     printf "noscartswitch=${HAVE_NO_SCART_SWITCH}\n" >> ${D}${INFOFILE}
     printf "scartyuv=${HAVE_SCART_YUV}\n" >> ${D}${INFOFILE}
@@ -144,10 +155,11 @@ do_install() {
     printf "timerwakeupmode=${TIMERWAKEUP_MODE}\n" >> ${D}${INFOFILE}
     printf "transcoding=${HAVE_TRANSCODING}\n" >> ${D}${INFOFILE}
     printf "ubinize='${UBINIZE_ARGS}'\n" >> ${D}${INFOFILE}
+    grep -q "inherit.*upx-compress" ${OPENPLI_BASE}/meta-openpli/recipes-openpli/enigma2/enigma2.bb && printf "upx='${UPX_VER}'\n" >> ${D}${INFOFILE}
     printf "vfdsymbol=${HAVE_VFDSYMBOL}\n" >> ${D}${INFOFILE}
     printf "wol=${HAVE_WOL}\n" >> ${D}${INFOFILE}
     printf "wwol=${HAVE_WWOL}\n" >> ${D}${INFOFILE}
-    printf "yocto='${YOCTO}'\n" >> ${D}${INFOFILE}
+    printf "yocto='${YOCTO_VERSION}'\n" >> ${D}${INFOFILE}
     printf "yuv=${HAVE_YUV}\n" >> ${D}${INFOFILE}
     printf "checksum=%s\n" $(md5sum "${D}${INFOFILE}" | awk '{print $1}') >> ${D}${INFOFILE}
 }

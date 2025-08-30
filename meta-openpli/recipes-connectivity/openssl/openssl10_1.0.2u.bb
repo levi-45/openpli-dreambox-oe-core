@@ -16,10 +16,10 @@ DEPENDS = "hostperl-runtime-native"
 DEPENDS:append:class-target = " openssl-native"
 
 PROVIDES += "libcrypto1.0.2 libssl1.0.2 openssl-conf1.0.2 openssl1.0.2"
-RPROVIDES:libcrypto10 ="libcrypto1.0.2"
-RPROVIDES:libssl10 ="libssl1.0.2"
-RPROVIDES:openssl-conf10 ="openssl-conf1.0.2"
-RPROVIDES:${PN} ="openssl1.0.2"
+RPROVIDES:libcrypto10 = "libcrypto1.0.2"
+RPROVIDES:libssl10 = "libssl1.0.2"
+RPROVIDES:openssl-conf10 = "openssl-conf1.0.2"
+RPROVIDES:${PN} = "openssl1.0.2"
 
 SRC_URI = "http://www.openssl.org/source/openssl-${PV}.tar.gz \
            file://run-ptest \
@@ -68,7 +68,7 @@ SRC_URI:append:class-nativesdk = " \
 SRC_URI[md5sum] = "cdc2638f789ecc2db2c91488265686c1"
 SRC_URI[sha256sum] = "ecd0c6ffb493dd06707d38b14bb4d8c2288bb7033735606569d8f90f89669d16"
 
-S = "${WORKDIR}/openssl-${PV}"
+S = "${UNPACKDIR}/openssl-${PV}"
 
 UPSTREAM_CHECK_REGEX = "openssl-(?P<pver>1\.0.+)\.tar"
 
@@ -91,8 +91,7 @@ EXTRA_OEMAKE = "${@bb.utils.contains('PACKAGECONFIG', 'manpages', '', 'OE_DISABL
 
 export OE_LDFLAGS = "${LDFLAGS}"
 
-TERMIO ?= "-DTERMIO"
-TERMIO:libc-musl = "-DTERMIOS"
+TERMIO ?= "-DTERMIOS"
 EXTRA_OECONF:append:libc-musl:powerpc64 = " no-asm"
 
 CFLAG = "${@oe.utils.conditional('SITEINFO_ENDIANNESS', 'le', '-DL_ENDIAN', '-DB_ENDIAN', d)} \

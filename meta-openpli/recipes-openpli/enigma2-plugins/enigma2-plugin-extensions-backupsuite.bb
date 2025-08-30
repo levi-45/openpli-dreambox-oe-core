@@ -14,9 +14,6 @@ RDEPENDS:${PN} = " \
 	ofgwrite \
 	${@bb.utils.contains("IMAGE_FSTYPES", "tar.bz2", "bzip2" , "", d)} \
 	"
-
-S = "${WORKDIR}/git"
-
 PV = "git"
 PKGV = "git${GITPKGV}"
 

@@ -15,20 +15,17 @@ RDEPENDS:${PN} += "\
 	python3-crypt \
 	${@bb.utils.contains("MACHINE_FEATURES", "dreamboxv2", "flash-scripts", "", d)} \
 	"
-
-S = "${WORKDIR}/git"
-
 SRCREV = "${AUTOREV}"
 
-PV = "1.1+git"
-PKGV = "1.1+git${GITPKGV}"
+PV = "9.8+git"
+PKGV = "9.8+git${GITPKGV}"
 
 FILES:${PN} = "${prefix}/"
 
 do_install() {
 	install -d ${D}${prefix}
 	cp -r ${S}${prefix}/* ${D}${prefix}/
-	python3 -m compileall -o2 -b ${D}${prefix}
+	python3 -m compileall -o2 -b ${D}${prefix} -d /
 }
 
 INSANE_SKIP:${PN} += "already-stripped"

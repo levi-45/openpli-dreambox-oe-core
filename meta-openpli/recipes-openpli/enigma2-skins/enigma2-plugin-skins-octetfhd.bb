@@ -13,14 +13,11 @@ PKGV = "git${GITPKGV}"
 
 RRECOMMENDS:${PN} = "enigma2-plugin-extensions-weatherplugin"
 
-SRC_URI="git://github.com/OpenVisionE2/OctEtFHD-skin.git;protocol=git;protocol=https;branch=master \
+SRC_URI = "git://github.com/OpenVisionE2/OctEtFHD-skin.git;protocol=git;protocol=https;branch=master \
 		file://OpenSans-Bold.ttf \
 		file://OpenSans-Regular.ttf \
 		file://segoe-ui-bold.ttf \
 "
-
-S = "${WORKDIR}/git"
-
 FILES:${PN} = "/usr"
 
 

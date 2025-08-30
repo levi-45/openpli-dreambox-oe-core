@@ -7,7 +7,7 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=bdeccdbc612afcae11e2a92dafa75e35"
 
 DEPENDS += "python3-versioningit-native"
 
-inherit python3-dir setuptools3 gittag
+inherit python3-dir setuptools3 gitpkgv
 
 RDEPENDS:${PN} = "python3-core \
     python3-ctypes \
@@ -37,9 +37,6 @@ SRCREV_FORMAT = "streamlink_plugins"
 
 SRC_URI = "git://github.com/streamlink/streamlink.git;protocol=https;name=streamlink;branch=master \
            git://github.com/oe-mirrors/streamlink-plugins;protocol=https;name=plugins;destsuffix=additional-plugins;branch=master"
-
-S = "${WORKDIR}/git"
-
 do_unpack:append() {
     bb.build.exec_func('do_prepare_plugins_dir', d)
 }

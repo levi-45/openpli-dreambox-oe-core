@@ -21,6 +21,11 @@
 # v1.2, xtest, v2.0" will force you to increment PE to get upgradeable
 # path to v2.0 revisions
 #
+# Another WARNING: Since Walnascar release BB_SHALLOW_GIT will actually
+# perform a shallow initial checkout, which makes it impossible to determine
+# the correct number of commits in the repository - thus using this class
+# is not recommended when shallow cloning is enabled.
+#
 # use example:
 #
 # inherit gittag
@@ -62,9 +67,12 @@ def gitpkgv_drop_tag_prefix(d, version):
 def get_git_pkgv(d, use_tags):
     import os
     import bb
-    from pipes import quote
+    from shlex import quote
 
     src_uri = d.getVar('SRC_URI').split()
+    unpackdir = d.getVar('UNPACKDIR')
+    def_destsuffix = (d.getVar("BB_GIT_DEFAULT_DESTSUFFIX") or "git") + "/"
+
     fetcher = bb.fetch2.Fetch(src_uri, d)
     ud = fetcher.ud
 
@@ -76,7 +84,7 @@ def get_git_pkgv(d, use_tags):
         names = []
         for url in ud.values():
             if url.type == 'git' or url.type == 'gitsm':
-                names.extend(url.revisions.keys())
+                names.append(url.name)
         if len(names) > 0:
             format = '_'.join(names)
         else:
@@ -85,47 +93,53 @@ def get_git_pkgv(d, use_tags):
     found = False
     for url in ud.values():
         if url.type == 'git' or url.type == 'gitsm':
-            for name, rev in url.revisions.items():
-                if not os.path.exists(url.localpath):
-                    return None
+            destsuffix = url.parm.get("destsuffix", def_destsuffix)
+            subdir = url.parm.get('subdir', '')
+            destdir = os.path.join(unpackdir, destsuffix, subdir)
 
-                found = True
+            if not os.path.exists(destdir):
+                return None
 
-                vars = { 'repodir' : quote(url.localpath),
-                         'rev' : quote(rev) }
+            if d.getVar('BB_GIT_SHALLOW') == '1':
+                bb.warnonce('%s: Shallow cloning enabled - gittag.bbclass will not generate sortable versions' % d.getVar('PN'))
 
-                rev = bb.fetch2.get_srcrev(d).split('+')[1]
-                rev_file = os.path.join(url.localpath, "oe-gitpkgv_" + rev)
+            found = True
 
-                if not os.path.exists(rev_file) or os.path.getsize(rev_file)==0:
-                    commits = bb.fetch2.runfetchcmd(
-                        "git --git-dir=%(repodir)s rev-list %(rev)s -- 2>/dev/null | wc -l"
-                        % vars, d, quiet=True).strip().lstrip('0')
+            vars = { 'repodir' : quote(destdir),
+                     'rev' : quote(url.revision) }
 
-                    if commits != "":
-                        oe.path.remove(rev_file, recurse=False)
-                        with open(rev_file, "w") as f:
-                            f.write("%d\n" % int(commits))
-                    else:
-                        commits = "0"
+            rev = bb.fetch2.get_srcrev(d).split('+')[1]
+            rev_file = os.path.join(destdir, "oe-gittag_" + url.revision)
+
+            if not os.path.exists(rev_file) or os.path.getsize(rev_file)==0:
+                commits = bb.fetch2.runfetchcmd(
+                    "git -C %(repodir)s rev-list %(rev)s -- 2>/dev/null | wc -l"
+                    % vars, d, quiet=True).strip().lstrip('0')
+
+                if commits != "":
+                    oe.path.remove(rev_file, recurse=False)
+                    with open(rev_file, "w") as f:
+                        f.write("%d\n" % int(commits))
                 else:
-                    with open(rev_file, "r") as f:
-                        commits = f.readline(128).strip()
+                    commits = "0"
+            else:
+                with open(rev_file, "r") as f:
+                    commits = f.readline(128).strip()
 
-                if use_tags:
-                    prefix = d.getVar('GITPKGV_PREFIX')
-                    try:
-                        output = bb.fetch2.runfetchcmd(
-                            "git --git-dir=%(repodir)s describe %(rev)s --tags 2>/dev/null"
-                            % vars, d, quiet=True).strip()
-                        ver = gitpkgv_drop_tag_prefix(d, output)
-                        ver = "%s-%s%s+%s" % (ver, prefix, commits, vars['rev'][:7])
-                    except Exception:
-                        ver = "0.0-%s%s+%s" % (prefix, commits, vars['rev'][:7])
-                else:
-                    ver = "%s+%s" % (commits, vars['rev'][:7])
+            if use_tags:
+                prefix = d.getVar('GITPKGV_PREFIX')
+                try:
+                    output = bb.fetch2.runfetchcmd(
+                        "git -C %(repodir)s describe %(rev)s --tags 2>/dev/null"
+                        % vars, d, quiet=True).strip()
+                    ver = gitpkgv_drop_tag_prefix(d, output)
+                    ver = "%s-%s%s+%s" % (ver, prefix, commits, vars['rev'][:7])
+                except Exception:
+                    ver = "0.0-%s%s+%s" % (prefix, commits, vars['rev'][:7])
+            else:
+                ver = "%s+%s" % (commits, vars['rev'][:7])
 
-                format = format.replace(name, ver)
+            format = format.replace(url.name, ver)
 
     if found:
         return format

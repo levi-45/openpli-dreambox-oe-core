@@ -4,7 +4,7 @@ MAINTAINER = "OpenPLi team <info@openpli.org>"
 LICENSE = "Proprietary"
 LIC_FILES_CHKSUM = "file://COPYING;md5=8e37f34d0e40d32ea2bc90ee812c9131"
 
-PACKAGE_ARCH = "all"
+PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 PACKAGES_DYNAMIC = "enigma2-plugin-(?!pli-).*"
 
@@ -25,16 +25,7 @@ RDEPENDS:enigma2-plugin-extensions-bonjour = "avahi-daemon"
 RRECOMMENDS:enigma2-plugin-systemplugins-blindscan = "virtual/blindscan-dvbs"
 RRECOMMENDS:enigma2-plugin-extensions-transmission = "transmission transmission-client"
 
-inherit gitpkgv python3native pkgconfig gettext python3targetconfig autotools-brokensep allarch
-
-# needed to prevent autotools from running C compiler checks, which
-# fails in allarch (as there is no cross compiler for this ARCH !!
-CC = ""
-CFLAGS = ""
-CPP = ""
-CPPFLAGS = ""
-CXX = ""
-CXXFLAGS = ""
+inherit gitpkgv pkgconfig gettext python3targetconfig autotools-brokensep
 
 PV = "y-git"
 PKGV = "y-git${GITPKGV}"
@@ -42,6 +33,7 @@ PKGV = "y-git${GITPKGV}"
 GITHUB_URI ?= "git://github.com"
 SRC_URI = "${GITHUB_URI}/OpenPLi/${BPN}.git;branch=python3;protocol=https \
 		file://remove-other-type-from-blindscan.patch \
+           file://remove-bluetooth-dependencies.patch \
 "
 
 # Main package should be empty
@@ -64,9 +56,6 @@ FILES:${PN}-meta = "${datadir}/meta"
 PACKAGES += "${PN}-meta ${PN}-build-dependencies"
 
 inherit autotools-brokensep
-
-S = "${WORKDIR}/git"
-
 DEPENDS = " \
 	python3-pillow \
 	python3-pyopenssl \
@@ -125,14 +114,9 @@ python populate_packages:prepend () {
                 d.setVar('MAINTAINER:' + full_package, line[12:])
 
 
-    mydir = d.getVar('D') + "/../git/"
+    mydir = d.getVar('S', True) + "/"
     for package in d.getVar('PACKAGES').split():
         getControlLines(mydir, package.split('-')[-1])
-}
-
-do_install:append() {
-	# remove leftover webinterface garbage
-	rm -rf ${D}${libdir}/enigma2/python/Plugins/Extensions/WebInterface
 }
 
 # Nothing of this recipe should end up in sysroot, so blank it away.
@@ -141,5 +125,3 @@ sysroot_stage_all() {
 }
 
 INSANE_SKIP:${PN} = "installed-vs-shipped"
-
-CFLAGS += "-Wno-error=implicit-function-declaration"

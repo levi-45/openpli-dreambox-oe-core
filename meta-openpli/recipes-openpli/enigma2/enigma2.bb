@@ -32,6 +32,7 @@ RDEPENDS:${PN} = " \
 	enigma2-timezones \
 	enigma2-remote \
 	ethtool \
+	rsync \
 	glibc-gconv-iso8859-15 \
 	oe-alliance-branding \
 	enigma2-locale-meta \
@@ -39,21 +40,18 @@ RDEPENDS:${PN} = " \
 	enigma2-plugin-drivers-exfat \
 	virtual-gstreamer1.0-dvbmediasink \
 	${PYTHON_RDEPS} \
-	${@bb.utils.contains("DISTRO_FEATURES", "e2hotplug", "checkinternet" , "hotplug-e2-helper", d)} \
+	${@bb.utils.contains("DISTRO_FEATURES", "e2hotplug", "" , "hotplug-e2-helper", d)} \
 	"
 
 RRECOMMENDS:${PN} = " \
 	enigma2-plugin-skins-pli-hd \
 	glibc-gconv-utf-16 \
 	python3-sendfile \
-	${@bb.utils.contains("MACHINE_FEATURES", "smallflash", "", \
-	" \
 	${GST_BASE_RDEPS} \
 	${GST_GOOD_RDEPS} \
 	${GST_BAD_RDEPS} \
 	${GST_UGLY_RDEPS} \
 	${GST_BAD_OPUS} \
-	", d)} \
 	"
 
 GST_BASE_RDEPS = "\
@@ -62,13 +60,12 @@ GST_BASE_RDEPS = "\
 	gstreamer1.0-plugins-base-audioconvert \
 	gstreamer1.0-plugins-base-audioresample \
 	gstreamer1.0-plugins-base-audiorate \
-	gstreamer1.0-plugins-base-videoconvert \
+	gstreamer1.0-plugins-base-videoconvertscale \
 	gstreamer1.0-plugins-base-ivorbisdec \
 	gstreamer1.0-plugins-base-ogg \
 	gstreamer1.0-plugins-base-playback \
 	gstreamer1.0-plugins-base-subparse \
 	gstreamer1.0-plugins-base-typefindfunctions \
-	gstreamer1.0-plugins-base-videoconvertscale \
 	gstreamer1.0-plugins-base-vorbis \
 	gstreamer1.0-plugins-base-rawparse \
 "
@@ -86,20 +83,17 @@ GST_GOOD_RDEPS = "\
 	gstreamer1.0-plugins-good-id3demux \
 	gstreamer1.0-plugins-good-isomp4 \
 	gstreamer1.0-plugins-good-matroska \
-	gstreamer1.0-plugins-good-mpg123 \
 	gstreamer1.0-plugins-good-rtp \
 	gstreamer1.0-plugins-good-rtpmanager \
 	gstreamer1.0-plugins-good-rtsp \
 	gstreamer1.0-plugins-good-soup \
 	gstreamer1.0-plugins-good-udp \
-	gstreamer1.0-plugins-good-vpx \
 	gstreamer1.0-plugins-good-wavparse \
 	gstreamer1.0-plugins-good-wavpack \
 "
 
 GST_BAD_RDEPS = "\
 	gstreamer1.0-plugins-bad-dash \
-	gstreamer1.0-plugins-bad-mms \
 	gstreamer1.0-plugins-bad-mpegpsdemux \
 	gstreamer1.0-plugins-bad-mpegtsdemux \
 	gstreamer1.0-plugins-bad-rtmp \
@@ -108,6 +102,7 @@ GST_BAD_RDEPS = "\
 	gstreamer1.0-plugins-bad-hls \
 	gstreamer1.0-plugins-bad-videoparsersbad \
 	gstreamer1.0-plugins-bad-autoconvert \
+	gstreamer1.0-plugins-bad-subenc \
 "
 
 GST_BAD_OPUS = " \
@@ -137,6 +132,7 @@ PYTHON_RDEPS = " \
 	python3-process \
 	python3-puremagic \
 	python3-pyusb \
+	python3-six \
 	python3-shell \
 	python3-trio \
 	python3-threading \
@@ -174,7 +170,7 @@ RDEPENDS:enigma2-plugin-systemplugins-wirelesslan = "wpa-supplicant wireless-too
 DESCRIPTION:append:enigma2-plugin-systemplugins-networkwizard = "provides easy step by step network configuration"
 # Note that these tools lack recipes
 RDEPENDS:enigma2-plugin-extensions-dvdburn = "dvd+rw-tools dvdauthor mjpegtools cdrkit ${DEMUXTOOL}"
-RDEPENDS:enigma2-plugin-systemplugins-hotplug = "${@bb.utils.contains("DISTRO_FEATURES", "e2hotplug", "checkinternet" , "hotplug-e2-helper", d)}"
+RDEPENDS:enigma2-plugin-systemplugins-hotplug = "${@bb.utils.contains("DISTRO_FEATURES", "e2hotplug", "" , "hotplug-e2-helper", d)}"
 
 # Fake package that doesn't actually get built, but allows OE to detect
 # the RDEPENDS for the plugins above, preventing [build-deps] warnings.
@@ -199,9 +195,6 @@ GITHUB_URI ?= "git://github.com"
 SRC_URI = "${GITHUB_URI}/fairbird/enigma2-dreambox.git;branch=${ENIGMA2_BRANCH};protocol=https"
 
 LDFLAGS:prepend = " -lxml2 "
-
-S = "${WORKDIR}/git"
-
 FILES:${PN} += "${datadir}/keymaps"
 FILES:${PN}-meta = "${datadir}/meta"
 PACKAGES += "${PN}-meta ${PN}-build-dependencies"
@@ -265,6 +258,7 @@ FILES:${PN}-src = "\
 	${libdir}/enigma2/python/NavigationInstance.py \
 	${libdir}/enigma2/python/PowerTimer.py \
 	${libdir}/enigma2/python/RecordTimer.py \
+	${libdir}/enigma2/python/Scheduler.py \
 	${libdir}/enigma2/python/ServiceReference.py \
 	${libdir}/enigma2/python/skin.py \
 	${libdir}/enigma2/python/timer.py \
@@ -273,6 +267,8 @@ FILES:${PN}-src = "\
 	${libdir}/enigma2/python/*/*/*.py \
 	${libdir}/enigma2/python/*/*/*/*.py \
 	"
+
+TARGET_CFLAGS += "-DGLIBC_64BIT_TIME_FLAGS"
 
 do_install:append() {
 	install -d ${D}${datadir}/keymaps

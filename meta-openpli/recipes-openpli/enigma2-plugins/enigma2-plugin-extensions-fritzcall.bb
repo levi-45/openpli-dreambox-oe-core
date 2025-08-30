@@ -9,11 +9,11 @@ inherit gitpkgv setuptools3-openplugins gettext
 
 SRC_URI = "\
 	git://github.com/DrMichael/FritzCall.git;protocol=https;branch=master \
-	file://git/setup.py \
-	file://git/setup_translate.py \
+	file://${BPN}-${PV}/setup.py \
+	file://${BPN}-${PV}/setup_translate.py \
 	"
 
 PV = "git"
 PKGV = "git${GITPKGV}"
 
-S = "${WORKDIR}/git"
+S = "${UNPACKDIR}/${BP}"

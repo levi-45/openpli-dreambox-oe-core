@@ -7,9 +7,6 @@ LICENSE = "PD"
 LIC_FILES_CHKSUM = "file://COPYING.GPLv2;md5=b234ee4d69f5fce4486a80fdaf4a4263"
 
 SRC_URI = " git://github.com/fairbird/Youtube-Opensource-DreamOS.git;protocol=https;branch=master"
-
-S = "${WORKDIR}/git"
-
 inherit gitpkgv setuptools3-openplugins python3-compileall
 
 PV = "1+git"
@@ -17,11 +14,10 @@ PKGV = "1+git${GITPKGV}"
 
 RDEPENDS:${PN} = " \
 	python3-core \
-	python3-codecs \
+	python3-datetime \
+	python3-email \
 	python3-json \
-	python3-netclient \
-	python3-pyopenssl \
-	python3-twisted-web \
+	python3-io \
 	"
 
 pkg_postinst_ontarget:${PN}() {

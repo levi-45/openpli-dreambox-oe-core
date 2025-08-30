@@ -6,21 +6,19 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=1ebbd3e34237af26da5dc08a4e440464"
 
 RDEPENDS:${PN} = "enigma2-tools-weatherinfo"
 
-inherit gettext gittag python3-compileall
+inherit gettext gitpkgv python3-compileall
 
 PV = "git"
 PKGV = "${GITPKGVTAG}"
 
-SRC_URI="git://github.com/oe-alliance/OAWeather;protocol=https;branch=main"
-
-S = "${WORKDIR}/git"
-
+SRC_URI = "git://github.com/oe-alliance/OAWeather;protocol=https;branch=main"
 PACKAGES =+ "${PN}-po"
 
 FILES:${PN} += "${libdir}/enigma2/python/Components/*/*.pyc ${libdir}/enigma2/python/Plugins/Extensions/OAWeather/*.pyc \
                 ${libdir}/enigma2/python/Plugins/Extensions/OAWeather/*.xml ${libdir}/enigma2/python/Plugins/Extensions/OAWeather/*.png \
                 ${libdir}/enigma2/python/Plugins/Extensions/OAWeather/locale/*/*/*.mo \
-                ${libdir}/enigma2/python/Plugins/Extensions/OAWeather/Images/*.png ${libdir}/enigma2/python/Plugins/Extensions/OAWeather/Icons/*.png"
+                ${libdir}/enigma2/python/Plugins/Extensions/OAWeather/Images/*.png ${libdir}/enigma2/python/Plugins/Extensions/OAWeather/Icons/*.png \
+                ${libdir}/enigma2/python/Plugins/Extensions/OAWeather/Images/moonphases/*.png"
 FILES:${PN}-src += "${libdir}/enigma2/python/Components/*/*.py {libdir}/enigma2/python/Plugins/Extensions/OAWeather/*.py"
 #FILES:${PN}-po += "${libdir}/enigma2/python/Plugins/Extensions/OAWeather/locale/*.po ${libdir}/enigma2/python/Plugins/Extensions/OAWeather/locale/*.pot"
 
@@ -43,3 +41,5 @@ do_install() {
     install -d ${D}${libdir}/enigma2/python/Plugins/Extensions/OAWeather/locale/
     cp -rf ${S}/locale/* ${D}${libdir}/enigma2/python/Plugins/Extensions/OAWeather/locale/
 }
+
+INSANE_SKIP:${PN} = "installed-vs-shipped"

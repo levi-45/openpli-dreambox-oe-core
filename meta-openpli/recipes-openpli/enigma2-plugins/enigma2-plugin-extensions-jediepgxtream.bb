@@ -5,9 +5,9 @@ HOMEPAGE = "https://github.com/kiddac/Jedi-EPG-XStream"
 
 inherit gitpkgv allarch python3-compileall
 
-SRCREV="${AUTOREV}"
+SRCREV = "${AUTOREV}"
 
-PV = "git${SRCPV}"
+PV = "git"
 PKGV = "git${GITPKGV}"
 
 SRC_URI = "git://github.com/kiddac/Jedi-EPG-XStream.git;protocol=https;branch=main \
@@ -15,9 +15,6 @@ SRC_URI = "git://github.com/kiddac/Jedi-EPG-XStream.git;protocol=https;branch=ma
            "
 
 RDEPENDS:${PN} = "python3-requests python3-difflib python3-thefuzz"
-
-S = "${WORKDIR}/git"
-
 FILES:${PN} = " ${sysconfdir}/enigma2/jediepgxtream/* \
                 ${libdir}/enigma2/python/Plugins/Extensions/JediEPGXtream/*"
 

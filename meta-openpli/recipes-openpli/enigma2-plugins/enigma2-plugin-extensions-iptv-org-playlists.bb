@@ -6,7 +6,7 @@ inherit gitpkgv allarch python3native gettext
 
 require conf/license/license-gplv2.inc
 
-PV = "1.0+git${SRCPV}"
+PV = "1.0+git"
 PKGV = "1.0+git${GITPKGV}"
 
 SRC_URI = "git://github.com/Huevos/iptv-org-playlists-plugin-for-enigma2.git;protocol=https;branch=master"
@@ -14,15 +14,12 @@ SRC_URI = "git://github.com/Huevos/iptv-org-playlists-plugin-for-enigma2.git;pro
 RDEPENDS:${PN} = "\
     python3-requests \
     "
-
-S = "${WORKDIR}/git"
-
 pluginpath = "/usr/lib/enigma2/python/Plugins/Extensions/iptv-org-playlists"
 
 do_install:append() {
 	install -d ${D}${pluginpath}
 	cp -r ${S}/src/* ${D}${pluginpath}/
-	python3 -m compileall -o2 -b ${D}
+	python3 -m compileall -o2 -b ${D} -d /
 	if [ -f /usr/bin/msgfmt ] ; then
 		find ${S}/po/ -maxdepth 1 -type f -name '*.po' | while read po ; do
 			## remove everything before and including the "/"

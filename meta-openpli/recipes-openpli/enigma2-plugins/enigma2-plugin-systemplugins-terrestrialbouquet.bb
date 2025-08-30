@@ -6,13 +6,10 @@ inherit gitpkgv allarch gettext python3-compileall
 
 require conf/license/license-gplv2.inc
 
-PV = "1.0+git${SRCPV}"
+PV = "1.0+git"
 PKGV = "1.0+git${GITPKGV}"
 
 SRC_URI = "git://github.com/Huevos/TerrestrialBouquet.git;protocol=https;branch=master"
-
-S = "${WORKDIR}/git"
-
 pluginpath = "/usr/lib/enigma2/python/Plugins/SystemPlugins/TerrestrialBouquet"
 
 FILES:${PN} = "${pluginpath}/"

@@ -16,7 +16,9 @@ SRC_URI = "http://www.penguin.cz/~utx/hardware/Ralink_3071/DPO_RT3070_LinuxSTA_V
 
 EXTRA_OEMAKE = "LINUX_SRC=${STAGING_KERNEL_DIR} KDIR=${STAGING_KERNEL_DIR}"
 
-S = "${WORKDIR}/DPO_RT3070_LinuxSTA_V${PV}_20100604"
+export KCFLAGS += " -std=gnu17"
+
+S = "${UNPACKDIR}/DPO_RT3070_LinuxSTA_V${PV}_20100604"
 
 # Source is in .tar.tar.bz2 format.
 do_unpack() {

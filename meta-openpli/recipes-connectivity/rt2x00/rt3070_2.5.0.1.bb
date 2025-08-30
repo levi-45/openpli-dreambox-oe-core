@@ -10,7 +10,9 @@ SRC_URI = "https://source.mynonpublic.com/gigablue/wlan/RT3070_RT3370_RT5370_RT5
 
 EXTRA_OEMAKE = "LINUX_SRC=${STAGING_KERNEL_DIR} KDIR=${STAGING_KERNEL_DIR}"
 
-S = "${WORKDIR}/RT3070_RT3370_RT5370_RT5372"
+export KCFLAGS += " -std=gnu17"
+
+S = "${UNPACKDIR}/RT3070_RT3370_RT5370_RT5372"
 
 do_install() {
     install -d ${D}${nonarch_base_libdir}/modules/${KERNEL_VERSION}/kernel/drivers/net/wireless
